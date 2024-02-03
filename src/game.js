@@ -7,6 +7,15 @@ let verbose = false;
 const G = 40;
 let button;
 
+const colors = {
+    green: "#CAE7B9",
+    yellow: "#F3DE8A",
+    pink: "#EB9486",
+    purple: "#7E6B8F",
+    blue: "#9CCBEC",
+    lightBlue: "#69DDFF",
+};
+
 function setup() {
     rectMode(CENTER);
 
@@ -15,7 +24,7 @@ function setup() {
     ship = new Body({ x: 500, y: 300, mass: 10, velY: 50 });
     shipImage = loadImage("assets/rocket-sprite.png");
     trajectory = [];
-    button = new Button(windowWidth / 2);
+    button = new Button(windowWidth / 2, 50, 100, 50, "Hello!", colors.blue, colors.lightBlue);
 }
 
 function draw() {
@@ -48,8 +57,16 @@ function draw() {
     // display the ship on the screen
     ship.update(1 / 60);
     image(shipImage, ship.x - 32, ship.y - 32, 64, 64);
+
+    button.show();
 }
 
 function pausePlay() {
     pause = !pause;
+}
+
+function mouseClicked() {
+    if (button.isHovering()) {
+        pause = !pause;
+    }
 }

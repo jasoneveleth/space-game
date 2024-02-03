@@ -28,6 +28,7 @@ class Body {
     }
 
     show(size_x, size_y) {
+        fill(255);
         ellipse(this.x, this.y, size_x || 50, size_y || 50);
         return this;
     }
@@ -52,7 +53,7 @@ class Body {
         this.vel.add(p5.Vector.mult(acc, dt));
         this.pos.add(p5.Vector.mult(this.vel, dt));
 
-        this.clearForces()
+        this.clearForces();
 
         return this;
     }

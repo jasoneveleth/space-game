@@ -10,20 +10,26 @@ class Button {
     }
 
     isHovering() {
-        return mouseX >= this.x && mouseY >= this.y && mouseX <= this.x + this.w && mouseY <= this.y + this.h;
+        return mouseX >= this.x - this.w / 2 && mouseY >= this.y - this.h / 2 && mouseX <= this.x + this.w / 2 && mouseY <= this.y + this.h / 2;
     }
 
     show() {
         noStroke();
 
-        if (isHoverting()) {
-            fill(this.hoverColor);
-        } else {
+        if (!this.isHovering()) {
             fill(this.color);
+        } else {
+            fill(255);
         }
 
-        rect(x, y, w, h);
-        fill(255);
-        text(text, x, y);
+        rect(this.x, this.y, this.w, this.h);
+
+        if (!this.isHovering()) {
+            fill(255);
+        } else {
+            fill(0);
+        }
+
+        text(this.text, this.x, this.y);
     }
 }
