@@ -1,6 +1,6 @@
 let ship;
 let shipImage; // image directory of the button
-let planetList;
+let fixedPlanetList;
 let trajectory;
 let pause = false;
 let verbose = false;
@@ -20,7 +20,7 @@ function setup() {
     rectMode(CENTER);
 
     createCanvas(windowWidth, windowHeight);
-    planetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
+    fixedPlanetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
     ship = new Body({ x: 500, y: 300, mass: 10, velY: 50 });
     shipImage = loadImage("assets/rocket-sprite.png");
     trajectory = [];
@@ -36,7 +36,7 @@ function draw() {
     // }
 
     // calculating the gravity force on the ship
-    for (let planet of planetList) {
+    for (let planet of fixedPlanetList) {
         planet.show();
 
         if (pause) {
