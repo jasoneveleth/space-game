@@ -28,7 +28,7 @@ class Body {
         this.pos.y = val;
     }
 
-    show(size_x, size_y) {
+    show() {
         fill(255);
         ellipse(this.x, this.y, this.r, this.r);
         return this;
@@ -61,5 +61,16 @@ class Body {
 
     isColliding(other) {
         return (this.x - other.x) ** 2 + (this.y - other.y) ** 2 <= this.r + other.r;
+    }
+
+    displayImage(imgSetup, angle) {
+        // pos_x and pos_y are positions 
+        push();
+        translate(this.pos.x, this.pos.y);
+        rotate(angle);
+        image(imgSetup.dir, -imgSetup.width/2, -imgSetup.height/2, imgSetup.width, imgSetup.height);
+        // translate(imgSetup.x, imgSetup.y)
+        translate(this.pos.x, this.pos.y);
+        pop();
     }
 }
