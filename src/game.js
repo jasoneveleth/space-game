@@ -24,18 +24,24 @@ function setup() {
     ship = new Body({ x: 500, y: 300, mass: 10, velY: 50 });
     shipImage = loadImage("assets/rocket-sprite.png");
     trajectory = [];
-    button = new Button(windowWidth / 2, 50, 100, 50, "Hello!", colors.blue, colors.lightBlue);
+    button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
 }
 
 function draw() {
-    if (pause) {
-        return;
-    }
     background(0);
+    button.show();
+
+    // if (pause) {
+    //     return;
+    // }
 
     // calculating the gravity force on the ship
     for (let planet of planetList) {
         planet.show();
+
+        if (pause) {
+            continue;
+        }
         // calculate gravitational force
         let relPosition = p5.Vector.sub(planet.pos, ship.pos);
         let magnitude = (G * planet.mass * ship.mass) / (relPosition.mag() * relPosition.mag() * relPosition.mag());
@@ -55,17 +61,22 @@ function draw() {
     fill(255, 255, 255);
 
     // display the ship on the screen
-    ship.update(1 / 60);
-    displayImage({
-        dir: shipImage, 
-        x: ship.x - 32, 
-        y: ship.y - 32, 
-        width: 64, 
-        height: 64}, 
-        atan2(ship.vel.x, -ship.vel.y), 
-        ship.x, ship.y);
+    if (!pause) {
+        ship.update(1 / 60);
+    }
 
-    button.show();
+    displayImage(
+        {
+            dir: shipImage,
+            x: ship.x - 32,
+            y: ship.y - 32,
+            width: 64,
+            height: 64,
+        },
+        atan2(ship.vel.x, -ship.vel.y),
+        ship.x,
+        ship.y
+    );
 }
 
 function pausePlay() {
@@ -74,17 +85,22 @@ function pausePlay() {
 
 function mouseClicked() {
     if (button.isHovering()) {
+        if (pause) {
+            button.text = "⏸";
+        } else {
+            button.text = "▶";
+        }
         pause = !pause;
     }
 }
 
 function displayImage(imgSetup, angle, pos_x, pos_y) {
-    // pos_x and pos_y 
+    // pos_x and pos_y
     push();
     // translate(imgSetup.x, imgSetup.y);
     translate(pos_x, pos_y);
     rotate(angle);
-    image(imgSetup.dir, -imgSetup.width/2, -imgSetup.height/2, imgSetup.width, imgSetup.height);
+    image(imgSetup.dir, -imgSetup.width / 2, -imgSetup.height / 2, imgSetup.width, imgSetup.height);
     // translate(imgSetup.x, imgSetup.y)
     translate(pos_x, pos_y);
     pop();

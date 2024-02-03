@@ -15,6 +15,8 @@ class Button {
 
     show() {
         noStroke();
+        textAlign(CENTER, CENTER);
+        textSize(20);
 
         if (!this.isHovering()) {
             fill(this.color);
@@ -22,7 +24,7 @@ class Button {
             fill(255);
         }
 
-        rect(this.x, this.y, this.w, this.h);
+        rect(this.x, this.y, this.w, this.h, 5);
 
         if (!this.isHovering()) {
             fill(255);
