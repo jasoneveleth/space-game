@@ -56,7 +56,14 @@ function draw() {
 
     // display the ship on the screen
     ship.update(1 / 60);
-    image(shipImage, ship.x - 32, ship.y - 32, 64, 64);
+    displayImage({
+        dir: shipImage, 
+        x: ship.x - 32, 
+        y: ship.y - 32, 
+        width: 64, 
+        height: 64}, 
+        atan2(ship.velY, ship.velX), 
+        ship.x, ship.y);
 
     button.show();
 }
@@ -69,4 +76,16 @@ function mouseClicked() {
     if (button.isHovering()) {
         pause = !pause;
     }
+}
+
+function displayImage(imgSetup, angle, pos_x, pos_y) {
+    // pos_x and pos_y 
+    push();
+    // translate(imgSetup.x, imgSetup.y);
+    translate(pos_x, pos_y);
+    rotate(angle);
+    image(imgSetup.dir, -imgSetup.width/2, -imgSetup.height/2, imgSetup.width, imgSetup.height);
+    // translate(imgSetup.x, imgSetup.y)
+    translate(pos_x, pos_y);
+    pop();
 }
