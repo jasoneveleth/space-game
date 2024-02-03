@@ -1,10 +1,10 @@
 let ship;
-let shipImage;
+let shipImage; // image directory of the button
 let planetList;
 let trajectory;
 let pause = false;
 let verbose = false;
-const G = 20;
+const G = 40;
 
 function setup() {
 
@@ -16,7 +16,7 @@ function setup() {
         new Body({x: 300, y: 800, mass: 10000})
     ];
     ship = new Body({x: 500, y: 300, mass: 10, velY: 50});
-    shipImage = loadImage('assets/triangle-xxl.png')
+    shipImage = loadImage('assets/rocket-sprite.png')
     trajectory = [];
 }
 
@@ -49,5 +49,9 @@ function draw() {
 
     // display the ship on the screen
     ship.update(1 / 60);
-    image(shipImage, ship.x-16, ship.y-16, 32, 32)
+    image(shipImage, ship.x-32, ship.y-32, 64, 64)
+}
+
+function pausePlay() {
+    pause = !pause
 }
