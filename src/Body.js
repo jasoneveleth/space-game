@@ -3,12 +3,12 @@ class Body {
         this.pos = createVector(options.x || 0, options.y || 0);
         this.vel = createVector(options.velX || 0, options.velY || 0);
         this.angle = options.angle || 0;
-        this.mass = options.mass || 0;
+        this.mass = options.mass || 1;
         this.forces = [];
         this.angularVel = options.angularVel || 0;
         this.angularAcc = options.angularAcc || 0;
         this.torques = [];
-        this.inertia = options.inertia || 0;
+        this.inertia = options.inertia || 1;
     }
 
     get x() {
