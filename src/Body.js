@@ -27,8 +27,8 @@ class Body {
         this.pos.y = val;
     }
 
-    show() {
-        ellipse(this.x, this.y, 50, 50);
+    show(size_x, size_y) {
+        ellipse(this.x, this.y, size_x || 50, size_y || 50);
         return this;
     }
 
@@ -51,6 +51,8 @@ class Body {
         let acc = p5.Vector.div(F, this.mass);
         this.vel.add(p5.Vector.mult(acc, dt));
         this.pos.add(p5.Vector.mult(this.vel, dt));
+
+        this.clearForces()
 
         return this;
     }
