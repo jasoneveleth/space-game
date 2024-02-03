@@ -9,6 +9,7 @@ class Body {
         this.angularAcc = options.angularAcc || 0;
         this.torques = [];
         this.inertia = options.inertia || 1;
+        this.r = options.r || 50;
     }
 
     get x() {
@@ -29,7 +30,7 @@ class Body {
 
     show(size_x, size_y) {
         fill(255);
-        ellipse(this.x, this.y, size_x || 50, size_y || 50);
+        ellipse(this.x, this.y, this.r, this.r);
         return this;
     }
 
@@ -56,5 +57,9 @@ class Body {
         this.clearForces();
 
         return this;
+    }
+
+    isColliding(other) {
+        return (this.x - other.x) ** 2 + (this.y - other.y) ** 2 <= this.r + other.r;
     }
 }
