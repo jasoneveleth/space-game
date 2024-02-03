@@ -4,7 +4,7 @@ let planetList;
 let trajectory;
 let pause = false;
 let verbose = false;
-const G = 40;
+const G = 20;
 let button;
 
 const colors = {
@@ -46,24 +46,26 @@ function draw() {
 
     // draw out the trajectory of the ship
     trajectory.push({ x: ship.x, y: ship.y });
-    fill(255, 0, 0);
+    if (trajectory.length > 256) {
+        trajectory.shift();
+    }
     noStroke();
-    for (let point of trajectory) {
-        ellipse(point.x, point.y, 5, 5);
+    for (var i = 0; i < trajectory.length; i++) {
+        fill(0, i, 0);
+        ellipse(trajectory[i].x, trajectory[i].y, 3, 3)
     }
     stroke(255, 255, 255);
     fill(255, 255, 255);
 
     // display the ship on the screen
     ship.update(1 / 60);
-    displayImage({
+    ship.displayImage({
         dir: shipImage, 
         x: ship.x - 32, 
         y: ship.y - 32, 
         width: 64, 
         height: 64}, 
-        atan2(ship.vel.x, -ship.vel.y), 
-        ship.x, ship.y);
+        atan2(ship.vel.x, -ship.vel.y))
 
     button.show();
 }
