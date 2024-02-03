@@ -62,7 +62,7 @@ function draw() {
         y: ship.y - 32, 
         width: 64, 
         height: 64}, 
-        atan2(ship.velY, ship.velX), 
+        atan2(ship.vel.x, -ship.vel.y), 
         ship.x, ship.y);
 
     button.show();
