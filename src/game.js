@@ -58,7 +58,7 @@ function draw() {
     noStroke();
     for (var i = 0; i < trajectory.length; i++) {
         fill(0, i, 0);
-        ellipse(trajectory[i].x, trajectory[i].y, 3, 3)
+        ellipse(trajectory[i].x, trajectory[i].y, 3, 3);
     }
     stroke(255, 255, 255);
     fill(255, 255, 255);
@@ -68,14 +68,16 @@ function draw() {
         ship.update(1 / 60);
     }
 
-    ship.update(1 / 60);
-    ship.displayImage({
-        dir: shipImage, 
-        x: ship.x - 32, 
-        y: ship.y - 32, 
-        width: 64, 
-        height: 64}, 
-
+    ship.displayImage(
+        {
+            dir: shipImage,
+            x: ship.x - 32,
+            y: ship.y - 32,
+            width: 64,
+            height: 64,
+        },
+        atan2(ship.vel.x, -ship.vel.y)
+    );
 }
 
 function pausePlay() {
