@@ -38,8 +38,7 @@ const colors = {
 function preload() {
     sprites.rocket = [loadImage("./assets/rocket-sprite.png")];
     sprites.home = loadImage("./assets/home-sprite.png");
-    sprites.planet = [loadImage("./assets/planet-sprite-1.png"),
-                    loadImage("./assets/planet-sprite-2.png")]
+    sprites.planet = [loadImage("./assets/planet-sprite-1.png"), loadImage("./assets/planet-sprite-2.png")];
     for (let i = 0; i < 26; i++) {
         sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`));
     }
@@ -174,12 +173,12 @@ function draw() {
         textSize(100);
         textAlign(CENTER, CENTER);
         // textAlign(CENTER, CENTER);
-        fill('red');
+        fill("red");
         stroke(0);
-        text('GAME OVER', windowWidth / 2, windowHeight / 2);
-        fill('white');
+        text("GAME OVER", windowWidth / 2, windowHeight / 2);
+        fill("white");
         textSize(20);
-        text('PRESS RESTART TO PLAY AGAIN', windowWidth / 2, windowHeight / 2+ 75)
+        text("PRESS RESTART TO PLAY AGAIN", windowWidth / 2, windowHeight / 2 + 75);
         fill(0);
         noStroke();
     }
@@ -189,12 +188,12 @@ function draw() {
         textSize(100);
         textAlign(CENTER, CENTER);
         // textAlign(CENTER, CENTER);
-        fill('white');
+        fill("white");
         stroke(0);
-        text('YOU WIN', windowWidth / 2, windowHeight / 2);
-        fill('white');
+        text("YOU WIN", windowWidth / 2, windowHeight / 2);
+        fill("white");
         textSize(20);
-        text('CHOOSE A LEVEL TO PROCEED', windowWidth / 2, windowHeight / 2+ 75)
+        text("CHOOSE A LEVEL TO PROCEED", windowWidth / 2, windowHeight / 2 + 75);
         fill(0);
         noStroke();
     }
@@ -211,7 +210,7 @@ function displayBackground() {
     // display comets
     for (var comet of comets) {
         if (!pause && losing_state == 0) {
-            angle = random(0, 2*PI);
+            angle = random(0, 2 * PI);
             force = p5.Vector.fromAngle(angle);
             force.mult(0.001);
             comet.addForce(force);
@@ -336,7 +335,7 @@ function generateStarsAndComets() {
     for (let i = 0; i < 75; i++) {
         let randomX = random(0, windowWidth);
         let randomY = random(0, windowHeight);
-        let randomR = random(2,5);
+        let randomR = random(2, 5);
         stars.push(createVector(randomX, randomY, randomR));
     }
     // generating comets
@@ -345,7 +344,7 @@ function generateStarsAndComets() {
         let posY = random(0, windowHeight);
         let angle = random(0, 2 * PI);
         let vel = p5.Vector.mult(p5.Vector.fromAngle(angle), 0.01);
-        let r = random(0.5, 2)
+        let r = random(0.5, 2);
         console.log(vel);
         comets.push(new Body({ x: posX, y: posY, velX: vel.x, velY: vel.y, r: r, isComet: true }));
     }
