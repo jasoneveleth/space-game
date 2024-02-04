@@ -115,6 +115,9 @@ function draw() {
     if (!winning) {
         if (ship.isColliding(home)) {
             winning = true;
+            if (currentLevel < level.length-1) {
+                level[currentLevel+1].unlocked = true;
+            }
         }
     }
 
