@@ -153,7 +153,7 @@ function draw() {
         if (planet.vel.mag() != 0) {
             angle = random(0, 2 * PI);
             force = p5.Vector.fromAngle(angle);
-            force.mult(0.001);
+            force.mult(0.3);
             planet.addForce(force);
             planet.update(1/60);
         }
