@@ -40,7 +40,7 @@ Use arrow keys to turn and space bar for thrust.`,
             home: { x: 860, y: windowHeight / 2, mass: 2000, img: sprites.home, r: 50 },
         },
         {
-            text: "Take it home",
+            text: "Bring it home",
             planetList: [
                 { x: 300, y: 500, velX: -0.05, velY: -0.05, mass: 10000, img: sprites.planet[0] },
                 { x: 450, y: 350, velX: 0.05, velY: 0.05, mass: 10000, img: sprites.planet[1] },
