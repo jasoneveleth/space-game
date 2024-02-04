@@ -38,10 +38,7 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
 
     level = level_setup();
-
-    planetList = level[0].planetList.map(x => new Body(x));
-    ship = new Body({ ...level[0].ship, img: sprites.rocket });
-    home = new Body({ ...level[0].home, img: sprites.home });
+    resetToLevel(0);
 
     trajectory = [];
     button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
@@ -116,6 +113,12 @@ function draw() {
     home.show();
 }
 
+function resetToLevel(n) {
+    planetList = level[n].planetList.map(x => new Body(x));
+    ship = new Body({ ...level[n].ship, img: sprites.rocket });
+    home = new Body({ ...level[n].home, img: sprites.home });
+}
+
 function mouseClicked() {
     if (button.isHovering()) {
         if (pause) {
@@ -127,7 +130,6 @@ function mouseClicked() {
     }
 
     if (level1_button.isHovering()) {
-        planetList = level[0].planetList.map(x => new Body(x));
-        ship = new Body(level[0].ship);
+        resetToLevel(0);
     }
 }
