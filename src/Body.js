@@ -9,8 +9,8 @@ class Body {
         this.angularAcc = options.angularAcc || 0;
         this.torques = [];
         this.inertia = options.inertia || 1;
-        this.r = options.r || this?.img?.width || 25;
         this.img = options.img;
+        this.r = options.r || this?.img?.width * 25/32 || 25;
         this.isComet = options.isComet || false;
     }
 
