@@ -322,7 +322,7 @@ function updateThrusters() {
 function resetToLevel(n) {
     stars = [];
     comets = [];
-
+    
     level_buttons[currentLevel].img = sprites.buttons.numbers[currentLevel];
     level_buttons[currentLevel].hoverImg = sprites.buttons.numbersHover[currentLevel];
     level_buttons[n].img = sprites.buttons.reset;
