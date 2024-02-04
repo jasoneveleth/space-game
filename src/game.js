@@ -8,6 +8,7 @@ const G = 60;
 let pauseButton;
 let losing_state = -1;
 let currentLevel = 0;
+let winning = false;
 let shipImgInfo;
 let sprites = {};
 let home;
@@ -37,6 +38,8 @@ const colors = {
 function preload() {
     sprites.rocket = [loadImage("./assets/rocket-sprite.png")];
     sprites.home = loadImage("./assets/home-sprite.png");
+    sprites.planet = [loadImage("./assets/planet-sprite-1.png"),
+                    loadImage("./assets/planet-sprite-2.png")]
     for (let i = 0; i < 26; i++) {
         sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`));
     }
@@ -109,6 +112,13 @@ function draw() {
         }
     }
 
+    // check for winning conditions
+    if (!winning) {
+        if (ship.isColliding(home)) {
+            winning = true;
+        }
+    }
+
     background(0);
     if (displayText) {
         textSize(50);
@@ -121,21 +131,24 @@ function draw() {
     thrusters_on = false;
     leftMargin = (windowWidth - WIDTH) / 2;
 
-    // calculating the gravity force on the ship
-    for (let planet of planetList) {
-        planet.show();
-        if (pause || losing_state > 0) {
-            continue;
-        }
-        addGravity(planet);
-    }
-
     handleKeyEvents();
     displayTrajectory();
     updateThrusters();
 
+    // calculating the gravity force on the ship
+    for (let planet of planetList) {
+        planet.show();
+        if (pause || losing_state > 0 || winning) {
+            continue;
+        }
+        addGravity(planet);
+    }
+    if (!pause && losing_state == 0 && !winning) {
+        addGravity(home);
+    }
+
     // display the ship on the screen
-    if (!pause && losing_state == 0) {
+    if (!pause && losing_state == 0 && !winning) {
         ship.update(1 / 60);
     }
     ship.show();
@@ -155,18 +168,55 @@ function draw() {
     fill(255, 165, 0);
     rect(windowWidth - 225 + fuel / 2, 50, fuel, 10);
     fill(255, 255, 255);
+
+    if (losing_state > 0) {
+        // if game over, display text
+        textSize(100);
+        textAlign(CENTER, CENTER);
+        // textAlign(CENTER, CENTER);
+        fill('red');
+        stroke(0);
+        text('GAME OVER', windowWidth / 2, windowHeight / 2);
+        fill('white');
+        textSize(20);
+        text('PRESS RESTART TO PLAY AGAIN', windowWidth / 2, windowHeight / 2+ 75)
+        fill(0);
+        noStroke();
+    }
+
+    if (winning) {
+        // if game over, display text
+        textSize(100);
+        textAlign(CENTER, CENTER);
+        // textAlign(CENTER, CENTER);
+        fill('white');
+        stroke(0);
+        text('YOU WIN', windowWidth / 2, windowHeight / 2);
+        fill('white');
+        textSize(20);
+        text('CHOOSE A LEVEL TO PROCEED', windowWidth / 2, windowHeight / 2+ 75)
+        fill(0);
+        noStroke();
+    }
 }
 
 function displayBackground() {
     // display stars
     for (var star of stars) {
         fill(255, 255, random(0, 255));
-        ellipse(star.x, star.y, 5, 5);
+        ellipse(star.x, star.y, star.z, star.z);
     }
     fill(255, 255, 255);
 
     // display comets
     for (var comet of comets) {
+        if (!pause && losing_state == 0) {
+            angle = random(0, 2*PI);
+            force = p5.Vector.fromAngle(angle);
+            force.mult(0.001);
+            comet.addForce(force);
+            comet.update();
+        }
         comet.show();
     }
 }
@@ -181,6 +231,9 @@ function addGravity(planet) {
 }
 
 function handleKeyEvents() {
+    if (pause || losing_state > 0 || winning) {
+        return;
+    }
     // handle key events
     if (keyIsDown(LEFT_ARROW)) {
         ship.angle -= PI / 90;
@@ -200,8 +253,12 @@ function handleKeyEvents() {
 }
 
 function displayTrajectory() {
+    if (!pause && losing_state == 0 && !winning) {
+        trajectory.push({ x: ship.x, y: ship.y });
+    } else if (losing_state > 0 || winning) {
+        trajectory = [];
+    }
     // draw out the trajectory of the ship
-    trajectory.push({ x: ship.x, y: ship.y });
     if (trajectory.length > 256) {
         trajectory.shift();
     }
@@ -210,7 +267,6 @@ function displayTrajectory() {
         fill(0, i, 0);
         ellipse(trajectory[i].x + leftMargin, trajectory[i].y, 3, 3);
     }
-    stroke(255, 255, 255);
     fill(255, 255, 255);
 }
 
@@ -227,7 +283,6 @@ function updateThrusters() {
             fill(i * multiplier, (i * multiplier) / 2, 0);
             ellipse(thrustTrajectory[i].x + leftMargin, thrustTrajectory[i].y, 10, 10);
         }
-        stroke(255, 255, 255);
     }
 
     if (!thrusters_on && thrustTrajectory.length > 0) {
@@ -244,6 +299,7 @@ function resetToLevel(n) {
     level_buttons[n].hoverImg = sprites.buttons.resetHover;
     currentLevel = n;
     losing_state = 0;
+    winning = false;
     fuel = 150;
     trajectory = [];
     generateStarsAndComets();
@@ -277,19 +333,21 @@ function mouseClicked() {
 
 function generateStarsAndComets() {
     // generating stars
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 75; i++) {
         let randomX = random(0, windowWidth);
         let randomY = random(0, windowHeight);
-        stars.push(createVector(randomX, randomY));
+        let randomR = random(2,5);
+        stars.push(createVector(randomX, randomY, randomR));
     }
     // generating comets
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 75; i++) {
         let posX = random(0, windowWidth);
         let posY = random(0, windowHeight);
         let angle = random(0, 2 * PI);
-        let vel = p5.Vector.mult(p5.Vector.fromAngle(angle), 100);
+        let vel = p5.Vector.mult(p5.Vector.fromAngle(angle), 0.01);
+        let r = random(0.5, 2)
         console.log(vel);
-        comets.push(new Body({ x: posX, y: posY, velX: vel.x, velY: vel.y, r: 5, isComet: true }));
+        comets.push(new Body({ x: posX, y: posY, velX: vel.x, velY: vel.y, r: r, isComet: true }));
     }
     print(comets);
 }
