@@ -105,7 +105,6 @@ function draw() {
     // checking for losing conditions
 
     if (losing_state > 0) {
-        console.log(losing_state, Math.floor(losing_state));
         ship.img = sprites.rocket[Math.floor(losing_state)];
         losing_state += 0.5;
         losing_state = Math.min(losing_state, 26);
