@@ -77,7 +77,7 @@ function setup() {
     fuel = 150;
     startBtn = startBtn = new Button(WIDTH / 2 - 115 / 2, HEIGHT / 2 + 120, 115, 116, sprites.buttons.play, sprites.buttons.playHover);
     pauseButton = new Button(WIDTH / 2 - level.length * 50, 50, 35, 35, sprites.buttons.pause, sprites.buttons.pauseHover);
-    for (let i = 1; i < level.length; i++) {
+    for (let i = 0; i < level.length; i++) {
         let levelIcon;
         let levelIconHover;
         if (level[i].unlocked) {
@@ -87,7 +87,7 @@ function setup() {
             levelIcon = sprites.buttons.lock;
             levelIconHover = sprites.buttons.lock;
         }
-        level_buttons.push(new Button(WIDTH / 2 + 50 * i - level.length * 50, 50, 35, 35, levelIcon, levelIconHover));
+        level_buttons.push(new Button(WIDTH / 2 + 50 * (i+1) - level.length * 50, 50, 35, 35, levelIcon, levelIconHover));
     }
     resetToLevel(0);
     thrust_trajectory = [];
