@@ -5,9 +5,9 @@ let trajectory = [];
 let pause = false;
 let verbose = false;
 const G = 60;
-let button;
+let pauseButton;
 let losing_state = -1;
-
+let currentLevel = 0;
 let shipImgInfo;
 let sprites = {};
 let home;
@@ -22,6 +22,8 @@ const HEIGHT = 540;
 let leftMargin = 0;
 let stars = [];
 let comets = [];
+let displayText = "";
+let frameClickedLevel = 0;
 
 const colors = {
     green: "#CAE7B9",
@@ -38,20 +40,50 @@ function preload() {
     for (let i = 0; i < 26; i++) {
         sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`));
     }
+    sprites.buttons = {};
+    sprites.buttons.numbers = [];
+    sprites.buttons.numbersHover = [];
+    sprites.buttons.pause = loadImage("./assets/buttons/pause.circle.png");
+    sprites.buttons.pauseHover = loadImage("./assets/buttons/pause.circle.fill.png");
+    sprites.buttons.play = loadImage("./assets/buttons/play.circle.png");
+    sprites.buttons.playHover = loadImage("./assets/buttons/play.circle.fill.png");
+    sprites.buttons.reset = loadImage("./assets/buttons/repeat.circle.png");
+    sprites.buttons.resetHover = loadImage("./assets/buttons/repeat.circle.fill.png");
+    for (let i = 0; i < 10; i++) {
+        sprites.buttons.numbers.push(loadImage(`./assets/buttons/${i + 1}.square.png`));
+        sprites.buttons.numbersHover.push(loadImage(`./assets/buttons/${i + 1}.square.fill.png`));
+    }
+    sprites.buttons.lock = loadImage("./assets/buttons/lock.square.fill.png");
 }
 
 function setup() {
     rectMode(CENTER);
+    textAlign(CENTER, CENTER);
     createCanvas(windowWidth, windowHeight);
 
     level = level_setup();
-    resetToLevel(0);
+    for (let i = 0; i < level.length; i++) {
+        level[i].completed = false;
+        level[i].unlocked = false;
+    }
+    level[0].unlocked = true;
+
     fuel = 150;
 
-    button = new Button(WIDTH / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
+    pauseButton = new Button(WIDTH / 2 - level.length * 50, 50, 35, 35, sprites.buttons.pause, sprites.buttons.pauseHover);
     for (let i = 0; i < level.length; i++) {
-        level_buttons.push(new Button(WIDTH / 2 + 50 * (i + 1), 50, 35, 35, "" + (i + 1), colors.blue, colors.lightBlue));
+        let levelIcon;
+        let levelIconHover;
+        if (level[i].unlocked) {
+            levelIcon = sprites.buttons.numbers[i];
+            levelIconHover = sprites.buttons.numbersHover[i];
+        } else {
+            levelIcon = sprites.buttons.lock;
+            levelIconHover = sprites.buttons.lock;
+        }
+        level_buttons.push(new Button(WIDTH / 2 + 50 * (i + 1) - level.length * 50, 50, 35, 35, levelIcon, levelIconHover));
     }
+    resetToLevel(0);
     thrust_trajectory = [];
     for (let i = 0; i < 30; i++) {
         let randomX = random(0, windowWidth);
@@ -78,6 +110,12 @@ function draw() {
     }
 
     background(0);
+    if (displayText) {
+        textSize(50);
+        fill(255 - Math.max(frameCount - frameClickedLevel, 0));
+        noStroke();
+        text(displayText, WIDTH / 2 + leftMargin, 200);
+    }
     displayBackground();
 
     thrusters_on = false;
@@ -89,7 +127,7 @@ function draw() {
         if (pause || losing_state > 0) {
             continue;
         }
-        addGravity(planet)
+        addGravity(planet);
     }
 
     handleKeyEvents();
@@ -104,7 +142,7 @@ function draw() {
     home.show();
 
     // show buttons and fuel bar
-    button.show();
+    pauseButton.show();
     for (let btn of level_buttons) {
         btn.show();
     }
@@ -200,28 +238,38 @@ function updateThrusters() {
 function resetToLevel(n) {
     stars = [];
     comets = [];
+    level_buttons[currentLevel].img = sprites.buttons.numbers[currentLevel];
+    level_buttons[currentLevel].hoverImg = sprites.buttons.numbersHover[currentLevel];
+    level_buttons[n].img = sprites.buttons.reset;
+    level_buttons[n].hoverImg = sprites.buttons.resetHover;
+    currentLevel = n;
     losing_state = 0;
     fuel = 150;
     trajectory = [];
     generateStarsAndComets();
     planetList = level[n].planetList.map(x => new Body(x));
+    displayText = level[n].text;
     ship = new Body({ ...level[n].ship, img: sprites.rocket[0] });
     home = new Body({ ...level[n].home, img: sprites.home });
     trajectory = [];
+    frameClickedLevel = frameCount;
 }
 
 function mouseClicked() {
-    if (button.isHovering()) {
+    if (pauseButton.isHovering()) {
+        console.log("PAUSE");
         if (pause) {
-            button.text = "⏸";
+            pauseButton.img = sprites.buttons.pause;
+            pauseButton.hoverImg = sprites.buttons.pauseHover;
         } else {
-            button.text = "▶";
+            pauseButton.img = sprites.buttons.play;
+            pauseButton.hoverImg = sprites.buttons.playHover;
         }
         pause = !pause;
     }
 
     for (let i = 0; i < level_buttons.length; i++) {
-        if (level_buttons[i].isHovering()) {
+        if (level_buttons[i].isHovering() && level[i].unlocked) {
             resetToLevel(i);
         }
     }
