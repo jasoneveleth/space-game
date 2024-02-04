@@ -10,7 +10,7 @@ class Button {
     }
 
     isHovering() {
-        return mouseX >= this.x - this.w / 2 && mouseY >= this.y - this.h / 2 && mouseX <= this.x + this.w / 2 && mouseY <= this.y + this.h / 2;
+        return mouseX - leftMargin >= this.x - this.w / 2 && mouseY >= this.y - this.h / 2 && mouseX - leftMargin <= this.x + this.w / 2 && mouseY <= this.y + this.h / 2;
     }
 
     show() {
@@ -24,7 +24,7 @@ class Button {
             fill(255);
         }
 
-        rect(this.x, this.y, this.w, this.h, 5);
+        rect(this.x + leftMargin, this.y, this.w, this.h, 5);
 
         if (!this.isHovering()) {
             fill(255);
@@ -32,6 +32,6 @@ class Button {
             fill(0);
         }
 
-        text(this.text, this.x, this.y);
+        text(this.text, this.x + leftMargin, this.y);
     }
 }

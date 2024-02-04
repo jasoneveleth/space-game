@@ -44,8 +44,8 @@ function setup() {
     home = new Body({ ...level[0].home, img: sprites.home });
 
     trajectory = [];
-    button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
-    level1_button = new Button(windowWidth / 2 + 50, 50, 35, 35, "1", colors.blue, colors.lightBlue);
+    button = new Button(WIDTH / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
+    level1_button = new Button(WIDTH / 2 + 50, 50, 35, 35, "1", colors.blue, colors.lightBlue);
     thrust_trajectory = [];
 }
 
@@ -54,7 +54,7 @@ function draw() {
     button.show();
     level1_button.show();
     thrusters_on = false;
-    leftMargin;
+    leftMargin = (windowWidth - WIDTH) / 2;
 
     // calculating the gravity force on the ship
     for (let planet of planetList) {
@@ -94,7 +94,7 @@ function draw() {
     noStroke();
     for (var i = 0; i < trajectory.length; i++) {
         fill(0, i, 0);
-        ellipse(trajectory[i].x, trajectory[i].y, 3, 3);
+        ellipse(trajectory[i].x + leftMargin, trajectory[i].y, 3, 3);
     }
     stroke(255, 255, 255);
     fill(255, 255, 255);

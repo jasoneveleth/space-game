@@ -32,17 +32,15 @@ class Body {
     show() {
         if (!this.img) {
             fill(255);
-            ellipse(this.x, this.y, this.r, this.r);
+            ellipse(this.x + leftMargin, this.y, this.r, this.r);
             return this;
         }
 
         // pos_x and pos_y are positions
         push();
-        translate(this.pos.x, this.pos.y);
+        translate(this.pos.x + leftMargin, this.pos.y);
         rotate(this.angle);
         image(this.img, -this.img.width, -this.img.height, this.img.width * 2, this.img.height * 2);
-        // translate(imgSetup.x, imgSetup.y)
-        translate(this.pos.x, this.pos.y);
         pop();
 
         return this;
