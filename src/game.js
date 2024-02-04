@@ -8,6 +8,8 @@ const G = 40;
 let button;
 let shipAngle;
 let shipImgInfo;
+let sprites = {};
+let home;
 
 const colors = {
     green: "#CAE7B9",
@@ -18,27 +20,17 @@ const colors = {
     lightBlue: "#69DDFF",
 };
 
+function preload() {
+    sprites.rocket = loadImage("./assets/rocket-sprite.png");
+    sprites.home = loadImage("./assets/home-sprite.png");
+}
+
 function setup() {
     rectMode(CENTER);
-
-    let img;
-    try {
-        img = loadImage("assets/rocket-sprite.png");
-    } catch {
-        img = image([], 0, 0);
-    }
-
     createCanvas(windowWidth, windowHeight);
     planetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
-    ship = new Body({ x: 100, y: 300, mass: 10, velY: 50 });
-    shipAngle = atan(ship.vel.x, -ship.vel.y);
-    shipImgInfo = {
-        dir: img,
-        x: ship.x - 32,
-        y: ship.y - 32,
-        width: 64,
-        height: 64,
-    };
+    ship = new Body({ x: 100, y: windowHeight / 2, mass: 10, velY: 50, img: sprites.rocket });
+    moon = new Body({ x: 900, y: windowHeight / 2, mass: 1000, img: sprites.home });
     trajectory = [];
     button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
 }
@@ -79,7 +71,7 @@ function draw() {
     if (!pause) {
         ship.update(1 / 60);
     }
-    ship.displayImage(shipImgInfo, shipAngle);
+    ship.show();
 
     // if (keyIsDown('a'.charCodeAt(0))) {
     //     shipAngle -= PI/9;

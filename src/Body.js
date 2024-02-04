@@ -10,6 +10,7 @@ class Body {
         this.torques = [];
         this.inertia = options.inertia || 1;
         this.r = options.r || 50;
+        this.img = options.img;
     }
 
     get x() {
@@ -29,8 +30,21 @@ class Body {
     }
 
     show() {
-        fill(255);
-        ellipse(this.x, this.y, this.r, this.r);
+        if (!this.img) {
+            fill(255);
+            ellipse(this.x, this.y, this.r, this.r);
+            return this;
+        }
+
+        // pos_x and pos_y are positions
+        push();
+        translate(this.pos.x, this.pos.y);
+        rotate(this.angle);
+        image(this.img, -this.img.width, -this.img.height, this.img.width * 2, this.img.height * 2);
+        // translate(imgSetup.x, imgSetup.y)
+        translate(this.pos.x, this.pos.y);
+        pop();
+
         return this;
     }
 
@@ -53,6 +67,7 @@ class Body {
         let acc = p5.Vector.div(F, this.mass);
         this.vel.add(p5.Vector.mult(acc, dt));
         this.pos.add(p5.Vector.mult(this.vel, dt));
+        this.angle = atan2(this.vel.x, -this.vel.y);
 
         this.clearForces();
 
@@ -61,16 +76,5 @@ class Body {
 
     isColliding(other) {
         return (this.x - other.x) ** 2 + (this.y - other.y) ** 2 <= this.r + other.r;
-    }
-
-    displayImage(imgSetup, angle) {
-        // pos_x and pos_y are positions 
-        push();
-        translate(this.pos.x, this.pos.y);
-        rotate(angle);
-        image(imgSetup.dir, -imgSetup.width/2, -imgSetup.height/2, imgSetup.width, imgSetup.height);
-        // translate(imgSetup.x, imgSetup.y)
-        translate(this.pos.x, this.pos.y);
-        pop();
     }
 }
