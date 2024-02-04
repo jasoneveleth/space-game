@@ -21,12 +21,19 @@ const colors = {
 function setup() {
     rectMode(CENTER);
 
+    let img;
+    try {
+        img = loadImage("assets/rocket-sprite.png");
+    } catch {
+        img = image([], 0, 0);
+    }
+
     createCanvas(windowWidth, windowHeight);
     planetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
-    ship = new Body({ x: 500, y: 300, mass: 10, velY: 50 });
+    ship = new Body({ x: 100, y: 300, mass: 10, velY: 50 });
     shipAngle = atan(ship.vel.x, -ship.vel.y);
     shipImgInfo = {
-        dir: loadImage("assets/rocket-sprite.png"),
+        dir: img,
         x: ship.x - 32,
         y: ship.y - 32,
         width: 64,
@@ -34,8 +41,6 @@ function setup() {
     };
     trajectory = [];
     button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
-
-    
 }
 
 function draw() {
@@ -83,7 +88,6 @@ function draw() {
     // if (keyIsDown('d'.charCodeAt(0))) {
     //     shipAngle += PI/9;
     // }
-
 }
 
 function mouseClicked() {
@@ -108,9 +112,6 @@ function displayImage(imgSetup, angle, pos_x, pos_y) {
     translate(pos_x, pos_y);
     pop();
 }
-
-
-
 
 // function keyPressed() {
 //     if (key === 'a') {
