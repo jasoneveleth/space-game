@@ -10,6 +10,7 @@ let shipAngle;
 let shipImgInfo;
 let sprites = {};
 let home;
+let level;
 
 const colors = {
     green: "#CAE7B9",
@@ -31,6 +32,11 @@ function setup() {
     planetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
     ship = new Body({ x: 100, y: windowHeight / 2, mass: 10, velY: 50, img: sprites.rocket });
     moon = new Body({ x: 900, y: windowHeight / 2, mass: 1000, img: sprites.home });
+
+    level = level_setup();
+    planetList = level[0].planetList;
+    ship = level[0].ship;
+
     trajectory = [];
     button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
 }
