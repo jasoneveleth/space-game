@@ -29,21 +29,13 @@ function preload() {
 
 function setup() {
     rectMode(CENTER);
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(960, 540);
 
     level = level_setup();
 
     planetList = level[0].planetList.map(x => new Body(x));
-    ship = new Body(level[0].ship);
-    home = new Body(level[0].home)
-    shipAngle = atan(ship.vel.x, -ship.vel.y);
-    shipImgInfo = {
-        dir: img,
-        x: ship.x - 32,
-        y: ship.y - 32,
-        width: 64,
-        height: 64,
-    };
+    ship = new Body({ ...level[0].ship, img: sprites.rocket });
+    home = new Body({ ...level[0].home, img: sprites.home });
 
     trajectory = [];
     button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
@@ -88,6 +80,7 @@ function draw() {
         ship.update(1 / 60);
     }
     ship.show();
+    home.show();
 
     // if (keyIsDown('a'.charCodeAt(0))) {
     //     shipAngle -= PI/9;
