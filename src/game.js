@@ -154,6 +154,13 @@ function draw() {
         if (pause || losing_state > 0 || winning) {
             continue;
         }
+        if (planet.vel.mag() != 0) {
+            angle = random(0, 2 * PI);
+            force = p5.Vector.fromAngle(angle);
+            force.mult(0.001);
+            planet.addForce(force)
+            planet.update()
+        }
         addGravity(planet);
     }
     if (!pause && losing_state == 0 && !winning) {
@@ -181,6 +188,8 @@ function draw() {
     fill(255, 165, 0);
     rect(windowWidth - 225 + fuel / 2, 50, fuel, 10);
     fill(255, 255, 255);
+
+
 
     if (losing_state > 0) {
         // if game over, display text
