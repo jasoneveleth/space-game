@@ -9,7 +9,7 @@ class Body {
         this.angularAcc = options.angularAcc || 0;
         this.torques = [];
         this.inertia = options.inertia || 1;
-        this.r = options.r || 50;
+        this.r = options.r || this?.img?.width || 25;
         this.img = options.img;
     }
 
@@ -32,7 +32,7 @@ class Body {
     show() {
         if (!this.img) {
             fill(255, 0, 0);
-            ellipse(this.x + leftMargin, this.y, this.r, this.r);
+            ellipse(this.x + leftMargin, this.y, this.r * 2, this.r * 2);
             return this;
         }
 
@@ -73,6 +73,6 @@ class Body {
     }
 
     isColliding(other) {
-        return (this.x - other.x) ** 2 + (this.y - other.y) ** 2 <= this.r + other.r;
+        return (this.x - other.x) ** 2 + (this.y - other.y) ** 2 <= (this.r + other.r) ** 2;
     }
 }

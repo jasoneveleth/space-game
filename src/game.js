@@ -6,7 +6,7 @@ let pause = false;
 let verbose = false;
 const G = 60;
 let button;
-let losing_state = -1
+let losing_state = -1;
 
 let shipImgInfo;
 let sprites = {};
@@ -35,7 +35,7 @@ function preload() {
     sprites.rocket = [loadImage("./assets/rocket-sprite.png")];
     sprites.home = loadImage("./assets/home-sprite.png");
     for (let i = 0; i < 26; i++) {
-        sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`))
+        sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`));
     }
 }
 
@@ -53,14 +53,14 @@ function setup() {
     for (let i = 0; i < 30; i++) {
         let randomX = random(0, windowWidth);
         let randomY = random(0, windowHeight);
-        stars.push(createVector(randomX, randomY))
+        stars.push(createVector(randomX, randomY));
     }
 }
 
 function draw() {
     if (losing_state > 0) {
         console.log(losing_state, Math.floor(losing_state));
-        ship.img = sprites.rocket[Math.floor(losing_state)]
+        ship.img = sprites.rocket[Math.floor(losing_state)];
         losing_state += 0.5;
         losing_state = Math.min(losing_state, 26);
     } else {
@@ -77,19 +77,19 @@ function draw() {
 
     // display stars
     for (var star of stars) {
-        fill(255,255,random(0, 255))
-        ellipse(star.x, star.y, 5, 5)
+        fill(255, 255, random(0, 255));
+        ellipse(star.x, star.y, 5, 5);
     }
-    fill(255,255,255)
+    fill(255, 255, 255);
 
-    // fuel bar 
-    fill(colors.blue)
-    rect(windowWidth - 150, 50, 200, 35, 5)
-    fill(0,0,0)
-    rect(windowWidth - 150, 50, 150, 10)
-    fill(255,165,0)
-    rect(windowWidth - 225 + fuel/2, 50, fuel, 10)
-    fill(255,255,255)
+    // fuel bar
+    fill(colors.blue);
+    rect(windowWidth - 150, 50, 200, 35, 5);
+    fill(0, 0, 0);
+    rect(windowWidth - 150, 50, 150, 10);
+    fill(255, 165, 0);
+    rect(windowWidth - 225 + fuel / 2, 50, fuel, 10);
+    fill(255, 255, 255);
 
     thrusters_on = false;
     leftMargin = (windowWidth - WIDTH) / 2;
@@ -121,7 +121,7 @@ function draw() {
         direction = p5.Vector.fromAngle(ship.angle - PI / 2);
         ship.vel.add(direction);
         thrusters_on = true;
-        console.log(direction[0] * 32)
+        console.log(direction[0] * 32);
         thruster_pos = { x: ship.pos.x - direction.x * 32, y: ship.pos.y - direction.y * 32 };
     }
 
@@ -139,23 +139,23 @@ function draw() {
     fill(255, 255, 255);
 
     // draw out the thruster light effect
-    if (thrusters_on & fuel >= 0) {
+    if (thrusters_on & (fuel >= 0)) {
         fuel -= 1;
-        thrust_trajectory.push({x: thruster_pos.x, y: thruster_pos.y})
+        thrust_trajectory.push({ x: thruster_pos.x, y: thruster_pos.y });
         if (thrust_trajectory.length > 20) {
             thrust_trajectory.shift();
         }
-        noStroke()
-        for (var i = thrust_trajectory.length-1; i>=0; i--) {
-            multiplier = 255 / thrust_trajectory.length
-            fill(i*multiplier, i*multiplier/2, 0)
-            ellipse(thrust_trajectory[i].x, thrust_trajectory[i].y, 10, 10)
+        noStroke();
+        for (var i = thrust_trajectory.length - 1; i >= 0; i--) {
+            multiplier = 255 / thrust_trajectory.length;
+            fill(i * multiplier, (i * multiplier) / 2, 0);
+            ellipse(thrust_trajectory[i].x + leftMargin, thrust_trajectory[i].y, 10, 10);
         }
-        stroke(255,255,255)
+        stroke(255, 255, 255);
     }
 
-    if (!thrusters_on && thrust_trajectory.length>0) {
-        thrust_trajectory = []
+    if (!thrusters_on && thrust_trajectory.length > 0) {
+        thrust_trajectory = [];
     }
 
     // display the ship on the screen
@@ -171,6 +171,7 @@ function resetToLevel(n) {
     planetList = level[n].planetList.map(x => new Body(x));
     ship = new Body({ ...level[n].ship, img: sprites.rocket[0] });
     home = new Body({ ...level[n].home, img: sprites.home });
+    trajectory = [];
 }
 
 function mouseClicked() {
