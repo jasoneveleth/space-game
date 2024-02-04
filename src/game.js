@@ -266,7 +266,6 @@ function handleKeyEvents() {
     // handle key events
     if (keyIsDown(LEFT_ARROW)) {
         ship.angle -= PI / 90;
-        console.log(ship.angle);
     }
     if (keyIsDown(RIGHT_ARROW)) {
         ship.angle += PI / 90;
@@ -276,7 +275,6 @@ function handleKeyEvents() {
         direction = p5.Vector.fromAngle(ship.angle - PI / 2);
         ship.vel.add(direction);
         thrusters_on = true;
-        console.log(direction[0] * 32);
         thruster_pos = { x: ship.pos.x - direction.x * 32, y: ship.pos.y - direction.y * 32 };
     }
 }
