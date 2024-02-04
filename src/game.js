@@ -26,7 +26,6 @@ let comets = [];
 let displayText = "";
 let frameClickedLevel = 0;
 let startBtn;
-let menu = true;
 
 const colors = {
     green: "#CAE7B9",
@@ -40,8 +39,7 @@ const colors = {
 function preload() {
     sprites.rocket = [loadImage("./assets/rocket-sprite.png")];
     sprites.home = loadImage("./assets/home-sprite.png");
-    sprites.planet = [loadImage("./assets/planet-sprite-1.png"), loadImage("./assets/planet-sprite-2.png"), 
-    loadImage("./assets/planet-sprite-green.png"),loadImage("./assets/planet-sprite-negative.png")];
+    sprites.planet = [loadImage("./assets/planet-sprite-1.png"), loadImage("./assets/planet-sprite-2.png"), loadImage("./assets/planet-sprite-green.png"), loadImage("./assets/planet-sprite-negative.png")];
     for (let i = 0; i < 26; i++) {
         sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`));
     }
@@ -54,9 +52,11 @@ function preload() {
     sprites.buttons.playHover = loadImage("./assets/buttons/play.circle.fill.png");
     sprites.buttons.reset = loadImage("./assets/buttons/repeat.circle.png");
     sprites.buttons.resetHover = loadImage("./assets/buttons/repeat.circle.fill.png");
-    for (let i = 0; i < 15; i++) {
-        sprites.buttons.numbers.push(loadImage(`./assets/buttons/${i + 1}.square.png`));
-        sprites.buttons.numbersHover.push(loadImage(`./assets/buttons/${i + 1}.square.fill.png`));
+    sprites.buttons.numbers.push(loadImage("./assets/buttons/house.circle.png"));
+    sprites.buttons.numbersHover.push(loadImage("./assets/buttons/house.circle.fill.png"));
+    for (let i = 1; i < 15; i++) {
+        sprites.buttons.numbers.push(loadImage(`./assets/buttons/${i}.square.png`));
+        sprites.buttons.numbersHover.push(loadImage(`./assets/buttons/${i}.square.fill.png`));
     }
     sprites.buttons.lock = loadImage("./assets/buttons/lock.square.fill.png");
 }
@@ -67,11 +67,12 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
 
     level = level_setup();
-    for (let i = 1; i < level.length; i++) {
+    for (let i = 0; i < level.length; i++) {
         level[i].completed = false;
         level[i].unlocked = false;
     }
     level[1].unlocked = true;
+    level[0].unlocked = true;
 
     fuel = 150;
     startBtn = startBtn = new Button(WIDTH / 2 - 115 / 2, HEIGHT / 2 + 120, 115, 116, sprites.buttons.play, sprites.buttons.playHover);
@@ -159,7 +160,7 @@ function draw() {
         }
         addGravity(planet);
     }
-    if (menu) {
+    if (currentLevel == 0) {
         startMenuScreen();
         return;
     }
@@ -322,7 +323,7 @@ function updateThrusters() {
 function resetToLevel(n) {
     stars = [];
     comets = [];
-    
+
     level_buttons[currentLevel].img = sprites.buttons.numbers[currentLevel];
     level_buttons[currentLevel].hoverImg = sprites.buttons.numbersHover[currentLevel];
     level_buttons[n].img = sprites.buttons.reset;
@@ -373,8 +374,7 @@ function mouseClicked() {
         }
     }
 
-    if (startBtn.isHovering() && menu) {
-        menu = false;
+    if (startBtn.isHovering() && currentLevel == 0) {
         resetToLevel(1);
     }
 }
