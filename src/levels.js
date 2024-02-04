@@ -2,9 +2,7 @@ function level_setup() {
     return [
         {
             text: `Try to get home! 
-Use arrow keys to turn and space bar for thrust.
-Created by Brayden Goldstein-Gelb, Zhengyu Zou,
-and Jason Eveleth`,
+Use arrow keys to turn and space bar for thrust.`,
             planetList: [],
             ship: { x: 100, y: 300, mass: 10, velY: 0, angle: Math.PI / 4 },
             home: { x: 860, y: windowHeight / 2, mass: 2000, img: sprites.home, r: 50 },

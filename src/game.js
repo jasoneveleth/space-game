@@ -25,6 +25,7 @@ let stars = [];
 let comets = [];
 let displayText = "";
 let frameClickedLevel = 0;
+let startBtn;
 let menu = true;
 
 const colors = {
@@ -72,7 +73,7 @@ function setup() {
     level[0].unlocked = true;
 
     fuel = 150;
-
+    startBtn = startBtn = new Button(WIDTH / 2 - 115 / 2, HEIGHT / 2 + 120, 115, 116, sprites.buttons.play, sprites.buttons.playHover);
     pauseButton = new Button(WIDTH / 2 - level.length * 50, 50, 35, 35, sprites.buttons.pause, sprites.buttons.pauseHover);
     for (let i = 0; i < level.length; i++) {
         let levelIcon;
@@ -98,7 +99,9 @@ function setup() {
 }
 
 function draw() {
+    leftMargin = (windowWidth - WIDTH) / 2;
     // checking for losing conditions
+
     if (losing_state > 0) {
         console.log(losing_state, Math.floor(losing_state));
         ship.img = sprites.rocket[Math.floor(losing_state)];
@@ -125,20 +128,25 @@ function draw() {
     }
 
     background(0);
+    displayBackground();
+
+    thrusters_on = false;
+
+    if (menu) {
+        startMenuScreen();
+        return;
+    }
+
+    handleKeyEvents();
+    displayTrajectory();
+    updateThrusters();
+
     if (displayText) {
         textSize(50);
         fill(255 - Math.max(frameCount - frameClickedLevel, 0));
         noStroke();
         text(displayText, WIDTH / 2 + leftMargin, 200);
     }
-    displayBackground();
-
-    thrusters_on = false;
-    leftMargin = (windowWidth - WIDTH) / 2;
-
-    handleKeyEvents();
-    displayTrajectory();
-    updateThrusters();
 
     // calculating the gravity force on the ship
     for (let planet of planetList) {
@@ -326,8 +334,17 @@ function resetToLevel(n) {
     frameClickedLevel = frameCount;
 }
 
+function startMenuScreen() {
+    fill(255);
+    textSize(100);
+    text("SPACE GOLF", WIDTH / 2 + leftMargin, HEIGHT / 2);
+    textSize(20);
+    text("Created by Brayden Goldstein-Gelb, Zhengyu Zou, and Jason Eveleth", WIDTH / 2 + leftMargin, HEIGHT / 2 + 70);
+    startBtn.show();
+}
+
 function setPause(val) {
-    if (val) {
+    if (!val) {
         pauseButton.img = sprites.buttons.pause;
         pauseButton.hoverImg = sprites.buttons.pauseHover;
     } else {
@@ -347,6 +364,10 @@ function mouseClicked() {
             resetToLevel(i);
             setPause(false);
         }
+    }
+
+    if (startBtn.isHovering() && menu) {
+        menu = false;
     }
 }
 
@@ -369,4 +390,8 @@ function generateStarsAndComets() {
         comets.push(new Body({ x: posX, y: posY, velX: vel.x, velY: vel.y, r: r, isComet: true }));
     }
     print(comets);
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
 }
