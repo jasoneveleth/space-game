@@ -8,6 +8,9 @@ const G = 40;
 let button;
 let shipAngle;
 let shipImgInfo;
+let thrust;
+let thrusters_on = false;
+let thrust_trajectory;
 
 const colors = {
     green: "#CAE7B9",
@@ -34,13 +37,13 @@ function setup() {
     };
     trajectory = [];
     button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
-
-    
+    thrust_trajectory = [];
 }
 
 function draw() {
     background(0);
     button.show();
+    thrusters_on = false;
 
     // calculating the gravity force on the ship
     for (let planet of planetList) {
@@ -57,6 +60,21 @@ function draw() {
         ship.addForce(force);
     }
 
+    if (keyIsDown(LEFT_ARROW)) {
+        shipAngle -= PI/90;
+        // console.log("key a is pressed")
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        shipAngle += PI/90;
+    }
+    let thruster_pos;
+    if (keyIsDown(32)) {
+        direction = p5.Vector.fromAngle(shipAngle - PI/2);
+        ship.vel.add(direction);
+        thrusters_on = true;
+        thrusters_pos = {x: ship.pos.x - direction[0]*32, y: ship.pos.y - direction[1]*32}
+    }
+
     // draw out the trajectory of the ship
     trajectory.push({ x: ship.x, y: ship.y });
     if (trajectory.length > 256) {
@@ -70,19 +88,22 @@ function draw() {
     stroke(255, 255, 255);
     fill(255, 255, 255);
 
+    // draw out the thruster light effect
+    if (thrusters_on) {
+        thrust_trajectory.push({x: thrusters_pos.x, y: thrusters_pos.y})
+        if (thrust_trajectory.length > 20) {
+            thrust_trajectory.shift()
+        }
+        // TODO
+    }
+
     // display the ship on the screen
     if (!pause) {
         ship.update(1 / 60);
     }
     ship.displayImage(shipImgInfo, shipAngle);
 
-    // if (keyIsDown('a'.charCodeAt(0))) {
-    //     shipAngle -= PI/9;
-    //     // console.log("key a is pressed")
-    // }
-    // if (keyIsDown('d'.charCodeAt(0))) {
-    //     shipAngle += PI/9;
-    // }
+    
 
 }
 
