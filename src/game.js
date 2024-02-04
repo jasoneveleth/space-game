@@ -11,6 +11,7 @@ let shipImgInfo;
 let sprites = {};
 let home;
 let level;
+let level1_button;
 
 const colors = {
     green: "#CAE7B9",
@@ -29,21 +30,30 @@ function preload() {
 function setup() {
     rectMode(CENTER);
     createCanvas(windowWidth, windowHeight);
-    planetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
-    ship = new Body({ x: 100, y: windowHeight / 2, mass: 10, velY: 50, img: sprites.rocket });
-    moon = new Body({ x: 900, y: windowHeight / 2, mass: 1000, img: sprites.home });
 
     level = level_setup();
-    planetList = level[0].planetList;
-    ship = level[0].ship;
+
+    planetList = level[0].planetList.map(x => new Body(x));
+    ship = new Body(level[0].ship);
+    home = new Body(level[0].home)
+    shipAngle = atan(ship.vel.x, -ship.vel.y);
+    shipImgInfo = {
+        dir: img,
+        x: ship.x - 32,
+        y: ship.y - 32,
+        width: 64,
+        height: 64,
+    };
 
     trajectory = [];
     button = new Button(windowWidth / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
+    level1_button = new Button(windowWidth / 2 + 50, 50, 35, 35, "1", colors.blue, colors.lightBlue);
 }
 
 function draw() {
     background(0);
     button.show();
+    level1_button.show();
 
     // calculating the gravity force on the ship
     for (let planet of planetList) {
@@ -96,6 +106,11 @@ function mouseClicked() {
             button.text = "▶";
         }
         pause = !pause;
+    }
+
+    if (level1_button.isHovering()) {
+        planetList = level[0].planetList.map(x => new Body(x));
+        ship = new Body(level[0].ship);
     }
 }
 
