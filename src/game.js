@@ -345,7 +345,7 @@ function resetToLevel(n) {
 function startMenuScreen() {
     fill(255);
     textSize(100);
-    text("SPACE GOLF", WIDTH / 2 + leftMargin, HEIGHT / 2);
+    text("COSMIC QUEST", WIDTH / 2 + leftMargin, HEIGHT / 2);
     textSize(20);
     text("Created by Brayden Goldstein-Gelb, Zhengyu Zou, and Jason Eveleth", WIDTH / 2 + leftMargin, HEIGHT / 2 + 70);
     startBtn.show();
