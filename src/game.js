@@ -6,7 +6,7 @@ let pause = false;
 let verbose = false;
 const G = 40;
 let button;
-let shipAngle;
+
 let shipImgInfo;
 let sprites = {};
 let home;
@@ -72,15 +72,15 @@ function draw() {
     }
 
     if (keyIsDown(LEFT_ARROW)) {
-        shipAngle -= PI / 90;
-        // console.log("key a is pressed")
+        ship.angle -= PI / 90;
+        console.log(ship.angle);
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        shipAngle += PI / 90;
+        ship.angle += PI / 90;
     }
-    let thruster_pos;
+
     if (keyIsDown(32)) {
-        direction = p5.Vector.fromAngle(shipAngle - PI / 2);
+        direction = p5.Vector.fromAngle(ship.angle - PI / 2);
         ship.vel.add(direction);
         thrusters_on = true;
         thrusters_pos = { x: ship.pos.x - direction[0] * 32, y: ship.pos.y - direction[1] * 32 };
@@ -131,23 +131,3 @@ function mouseClicked() {
         ship = new Body(level[0].ship);
     }
 }
-
-function displayImage(imgSetup, angle, pos_x, pos_y) {
-    // pos_x and pos_y
-    push();
-    // translate(imgSetup.x, imgSetup.y);
-    translate(pos_x, pos_y);
-    rotate(angle);
-    image(imgSetup.dir, -imgSetup.width / 2, -imgSetup.height / 2, imgSetup.width, imgSetup.height);
-    // translate(imgSetup.x, imgSetup.y)
-    translate(pos_x, pos_y);
-    pop();
-}
-
-// function keyPressed() {
-//     if (key === 'a') {
-//         shipAngle -= PI/9;
-//     } else if (key === 'd') {
-//         shipAngle += PI/9;
-//     }
-// }

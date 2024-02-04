@@ -67,7 +67,7 @@ class Body {
         let acc = p5.Vector.div(F, this.mass);
         this.vel.add(p5.Vector.mult(acc, dt));
         this.pos.add(p5.Vector.mult(this.vel, dt));
-        this.angle = atan2(this.vel.x, -this.vel.y);
+        // this.angle = atan2(this.vel.x, -this.vel.y);
 
         this.clearForces();
 
