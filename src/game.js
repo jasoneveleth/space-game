@@ -8,6 +8,7 @@ const G = 40;
 let button;
 let shipAngle;
 let shipImgInfo;
+let level;
 
 const colors = {
     green: "#CAE7B9",
@@ -20,6 +21,7 @@ const colors = {
 
 function setup() {
     rectMode(CENTER);
+    level = level_setup()
 
     let img;
     try {
@@ -29,8 +31,8 @@ function setup() {
     }
 
     createCanvas(windowWidth, windowHeight);
-    planetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
-    ship = new Body({ x: 100, y: 300, mass: 10, velY: 50 });
+    planetList = level[0].planetList;
+    ship = level[0].ship;
     shipAngle = atan(ship.vel.x, -ship.vel.y);
     shipImgInfo = {
         dir: img,
