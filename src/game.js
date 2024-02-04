@@ -53,7 +53,7 @@ function preload() {
     sprites.buttons.playHover = loadImage("./assets/buttons/play.circle.fill.png");
     sprites.buttons.reset = loadImage("./assets/buttons/repeat.circle.png");
     sprites.buttons.resetHover = loadImage("./assets/buttons/repeat.circle.fill.png");
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 15; i++) {
         sprites.buttons.numbers.push(loadImage(`./assets/buttons/${i + 1}.square.png`));
         sprites.buttons.numbersHover.push(loadImage(`./assets/buttons/${i + 1}.square.fill.png`));
     }
@@ -66,16 +66,16 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
 
     level = level_setup();
-    for (let i = 0; i < level.length; i++) {
+    for (let i = 1; i < level.length; i++) {
         level[i].completed = false;
         level[i].unlocked = false;
     }
-    level[0].unlocked = true;
+    level[1].unlocked = true;
 
     fuel = 150;
     startBtn = startBtn = new Button(WIDTH / 2 - 115 / 2, HEIGHT / 2 + 120, 115, 116, sprites.buttons.play, sprites.buttons.playHover);
     pauseButton = new Button(WIDTH / 2 - level.length * 50, 50, 35, 35, sprites.buttons.pause, sprites.buttons.pauseHover);
-    for (let i = 0; i < level.length; i++) {
+    for (let i = 1; i < level.length; i++) {
         let levelIcon;
         let levelIconHover;
         if (level[i].unlocked) {
@@ -85,7 +85,7 @@ function setup() {
             levelIcon = sprites.buttons.lock;
             levelIconHover = sprites.buttons.lock;
         }
-        level_buttons.push(new Button(WIDTH / 2 + 50 * (i + 1) - level.length * 50, 50, 35, 35, levelIcon, levelIconHover));
+        level_buttons.push(new Button(WIDTH / 2 + 50 * i - level.length * 50, 50, 35, 35, levelIcon, levelIconHover));
     }
     resetToLevel(0);
     thrust_trajectory = [];
@@ -374,6 +374,7 @@ function mouseClicked() {
 
     if (startBtn.isHovering() && menu) {
         menu = false;
+        resetToLevel(1);
     }
 }
 
