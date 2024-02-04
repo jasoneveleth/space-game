@@ -1,11 +1,10 @@
 let ship;
 let shipImage; // image directory of the button
-let fixedPlanetList;
-let dynamicPlanetsList;
+let planetList;
 let trajectory;
 let pause = false;
 let verbose = false;
-const G = 1;
+const G = 40;
 let button;
 let shipAngle;
 let shipImgInfo;
@@ -23,8 +22,7 @@ function setup() {
     rectMode(CENTER);
 
     createCanvas(windowWidth, windowHeight);
-    fixedPlanetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
-    dynamicPlanetsList = [new Body({x: 700, y: 800, mass: 40000}), new Body({x: 600, y: 200, mass: 40000}), new Body({x: 500, y: 100, mass: 40000})]
+    planetList = [new Body({ x: 100, y: 100, mass: 10000 }), new Body({ x: 400, y: 300, mass: 10000 }), new Body({ x: 300, y: 800, mass: 10000 })];
     ship = new Body({ x: 500, y: 300, mass: 10, velY: 50 });
     shipAngle = atan(ship.vel.x, -ship.vel.y);
     shipImgInfo = {
@@ -45,7 +43,7 @@ function draw() {
     button.show();
 
     // calculating the gravity force on the ship
-    for (let planet of fixedPlanetList) {
+    for (let planet of planetList) {
         planet.show();
 
         if (pause) {
@@ -57,29 +55,6 @@ function draw() {
         let force = relPosition.mult(magnitude);
         // add force to ship
         ship.addForce(force);
-
-        for (let dynplanet of dynamicPlanetsList) {
-            let relPosition = p5.Vector.sub(planet.pos, dynplanet.pos);
-            let magnitude = (G * planet.mass * dynplanet.mass) / (relPosition.mag() * relPosition.mag() * relPosition.mag());
-            let force = relPosition.mult(magnitude);
-            dynplanet.addForce(force)
-        }
-    }
-
-    for (let inner of dynamicPlanetsList) {
-        for (let outer of dynamicPlanetsList) {
-            if (inner == outer) {
-                continue;
-            }
-            let relPosition = p5.Vector.sub(inner.pos, outer.pos);
-            let magnitude = (G * inner.mass * outer.mass) / (relPosition.mag() * relPosition.mag() * relPosition.mag());
-            let force = relPosition.mult(magnitude);
-            outer.addForce(force)
-        }
-    }
-    for (let dynplanet of dynamicPlanetsList) {
-        dynplanet.update()
-        dynplanet.show()
     }
 
     // draw out the trajectory of the ship
