@@ -25,6 +25,7 @@ let stars = [];
 let comets = [];
 let displayText = "";
 let frameClickedLevel = 0;
+let menu = true;
 
 const colors = {
     green: "#CAE7B9",
@@ -115,8 +116,10 @@ function draw() {
     if (!winning) {
         if (ship.isColliding(home)) {
             winning = true;
-            if (currentLevel < level.length-1) {
-                level[currentLevel+1].unlocked = true;
+            if (currentLevel < level.length - 1) {
+                level[currentLevel + 1].unlocked = true;
+                level_buttons[currentLevel + 1].img = sprites.buttons.numbers[currentLevel + 1];
+                level_buttons[currentLevel + 1].hoverImg = sprites.buttons.numbersHover[currentLevel + 1];
             }
         }
     }
@@ -191,11 +194,20 @@ function draw() {
         textSize(100);
         textAlign(CENTER, CENTER);
         // textAlign(CENTER, CENTER);
-        fill("white");
-        stroke(0);
-        text("YOU WIN", windowWidth / 2, windowHeight / 2);
-        fill("white");
-        textSize(20);
+        if (currentLevel >= level.length - 1) {
+            fill("green");
+            stroke(0);
+            text("YOU WIN!", windowWidth / 2, windowHeight / 2);
+            fill("white");
+            textSize(20);
+        } else {
+            fill("white");
+            stroke(0);
+            text("Level Complete", windowWidth / 2, windowHeight / 2);
+            fill("white");
+            textSize(20);
+        }
+
         text("CHOOSE A LEVEL TO PROCEED", windowWidth / 2, windowHeight / 2 + 75);
         fill(0);
         noStroke();
@@ -295,6 +307,7 @@ function updateThrusters() {
 function resetToLevel(n) {
     stars = [];
     comets = [];
+
     level_buttons[currentLevel].img = sprites.buttons.numbers[currentLevel];
     level_buttons[currentLevel].hoverImg = sprites.buttons.numbersHover[currentLevel];
     level_buttons[n].img = sprites.buttons.reset;
@@ -313,22 +326,26 @@ function resetToLevel(n) {
     frameClickedLevel = frameCount;
 }
 
+function setPause(val) {
+    if (val) {
+        pauseButton.img = sprites.buttons.pause;
+        pauseButton.hoverImg = sprites.buttons.pauseHover;
+    } else {
+        pauseButton.img = sprites.buttons.play;
+        pauseButton.hoverImg = sprites.buttons.playHover;
+    }
+    pause = val;
+}
+
 function mouseClicked() {
     if (pauseButton.isHovering()) {
-        console.log("PAUSE");
-        if (pause) {
-            pauseButton.img = sprites.buttons.pause;
-            pauseButton.hoverImg = sprites.buttons.pauseHover;
-        } else {
-            pauseButton.img = sprites.buttons.play;
-            pauseButton.hoverImg = sprites.buttons.playHover;
-        }
-        pause = !pause;
+        setPause(!pause);
     }
 
     for (let i = 0; i < level_buttons.length; i++) {
         if (level_buttons[i].isHovering() && level[i].unlocked) {
             resetToLevel(i);
+            setPause(false);
         }
     }
 }
