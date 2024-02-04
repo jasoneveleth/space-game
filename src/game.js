@@ -132,11 +132,6 @@ function draw() {
 
     thrusters_on = false;
 
-    if (menu) {
-        startMenuScreen();
-        return;
-    }
-
     handleKeyEvents();
     displayTrajectory();
     updateThrusters();
@@ -158,10 +153,14 @@ function draw() {
             angle = random(0, 2 * PI);
             force = p5.Vector.fromAngle(angle);
             force.mult(0.001);
-            planet.addForce(force)
-            planet.update()
+            planet.addForce(force);
+            planet.update();
         }
         addGravity(planet);
+    }
+    if (menu) {
+        startMenuScreen();
+        return;
     }
     if (!pause && losing_state == 0 && !winning) {
         addGravity(home);
@@ -188,8 +187,6 @@ function draw() {
     fill(255, 165, 0);
     rect(windowWidth - 225 + fuel / 2, 50, fuel, 10);
     fill(255, 255, 255);
-
-
 
     if (losing_state > 0) {
         // if game over, display text
@@ -382,16 +379,16 @@ function mouseClicked() {
 
 function generateStarsAndComets() {
     // generating stars
-    for (let i = 0; i < 75; i++) {
-        let randomX = random(0, windowWidth);
-        let randomY = random(0, windowHeight);
+    for (let i = 0; i < 150; i++) {
+        let randomX = random(0, 3840);
+        let randomY = random(0, 2160);
         let randomR = random(2, 5);
         stars.push(createVector(randomX, randomY, randomR));
     }
     // generating comets
-    for (let i = 0; i < 75; i++) {
-        let posX = random(0, windowWidth);
-        let posY = random(0, windowHeight);
+    for (let i = 0; i < 150; i++) {
+        let posX = random(0, 3840);
+        let posY = random(0, 2160);
         let angle = random(0, 2 * PI);
         let vel = p5.Vector.mult(p5.Vector.fromAngle(angle), 0.01);
         let r = random(0.5, 2);
