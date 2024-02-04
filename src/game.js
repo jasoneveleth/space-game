@@ -12,14 +12,11 @@ let winning = false;
 let shipImgInfo;
 let sprites = {};
 let home;
-let level;
 let level_buttons = [];
 let thrust;
 let thrusters_on = false;
 let thrustTrajectory;
 let fuel;
-const WIDTH = 960;
-const HEIGHT = 540;
 let leftMargin = 0;
 let stars = [];
 let comets = [];
@@ -37,28 +34,31 @@ const colors = {
 };
 
 function preload() {
-    sprites.rocket = [loadImage("./assets/rocket-sprite.png")];
-    sprites.home = loadImage("./assets/home-sprite.png");
-    sprites.planet = [loadImage("./assets/planet-sprite-1.png"), loadImage("./assets/planet-sprite-2.png"), loadImage("./assets/planet-sprite-green.png"), loadImage("./assets/planet-sprite-negative.png")];
+    sprites.rocket = [loadImage("assets/rocket-sprite.png")];
+    sprites.home = loadImage("assets/home-sprite.png");
+    sprites.planet = [loadImage("assets/planet-sprite-1.png"), loadImage("assets/planet-sprite-2.png"), loadImage("assets/planet-sprite-green.png"), loadImage("assets/planet-sprite-negative.png")];
     for (let i = 0; i < 26; i++) {
-        sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`));
+        sprites.rocket.push(loadImage(`assets/explosion/output${i}.png`));
     }
     sprites.buttons = {};
     sprites.buttons.numbers = [];
     sprites.buttons.numbersHover = [];
-    sprites.buttons.pause = loadImage("./assets/buttons/pause.circle.png");
-    sprites.buttons.pauseHover = loadImage("./assets/buttons/pause.circle.fill.png");
-    sprites.buttons.play = loadImage("./assets/buttons/play.circle.png");
-    sprites.buttons.playHover = loadImage("./assets/buttons/play.circle.fill.png");
-    sprites.buttons.reset = loadImage("./assets/buttons/repeat.circle.png");
-    sprites.buttons.resetHover = loadImage("./assets/buttons/repeat.circle.fill.png");
-    sprites.buttons.numbers.push(loadImage("./assets/buttons/house.circle.png"));
-    sprites.buttons.numbersHover.push(loadImage("./assets/buttons/house.circle.fill.png"));
-    for (let i = 1; i < 15; i++) {
-        sprites.buttons.numbers.push(loadImage(`./assets/buttons/${i}.square.png`));
-        sprites.buttons.numbersHover.push(loadImage(`./assets/buttons/${i}.square.fill.png`));
+    sprites.buttons.pause = loadImage("assets/buttons/pause.circle.png");
+    sprites.buttons.pauseHover = loadImage("assets/buttons/pause.circle.fill.png");
+    sprites.buttons.play = loadImage("assets/buttons/play.circle.png");
+    sprites.buttons.playHover = loadImage("assets/buttons/play.circle.fill.png");
+    sprites.buttons.reset = loadImage("assets/buttons/repeat.circle.png");
+    sprites.buttons.resetHover = loadImage("assets/buttons/repeat.circle.fill.png");
+    sprites.buttons.numbers.push(loadImage("assets/buttons/house.circle.png"));
+    sprites.buttons.numbersHover.push(loadImage("assets/buttons/house.circle.fill.png"));
+    for (let i = 0; i < level.length - 2; i++) { // -2 because level[0] is menu screen, and level[level.length-1] is infinite
+        let n = i + 1;
+        sprites.buttons.numbers.push(loadImage(`assets/buttons/${n}.square.png`));
+        sprites.buttons.numbersHover.push(loadImage(`assets/buttons/${n}.square.fill.png`));
     }
-    sprites.buttons.lock = loadImage("./assets/buttons/lock.square.fill.png");
+    sprites.buttons.numbers.push(loadImage("assets/buttons/infinity.circle.png"))
+    sprites.buttons.numbersHover.push(loadImage("assets/buttons/infinity.circle.fill.png"))
+    sprites.buttons.lock = loadImage("assets/buttons/lock.square.fill.png");
 }
 
 function setup() {
@@ -66,7 +66,6 @@ function setup() {
     textAlign(CENTER, CENTER);
     createCanvas(windowWidth, windowHeight);
 
-    level = level_setup();
     for (let i = 0; i < level.length; i++) {
         level[i].completed = false;
         level[i].unlocked = false;
@@ -105,7 +104,7 @@ function draw() {
     // checking for losing conditions
 
     if (losing_state > 0) {
-        ship.img = sprites.rocket[Math.floor(losing_state)];
+        ship.img = sprites => sprites.rocket[Math.floor(losing_state)];
         losing_state += 0.5;
         losing_state = Math.min(losing_state, 26);
     } else {
@@ -139,7 +138,7 @@ function draw() {
 
     if (displayText) {
         textSize(50);
-        fill(255 - Math.max(frameCount - frameClickedLevel, 0));
+        fill(255,255,255, 255 - Math.max(frameCount - frameClickedLevel, 0));
         noStroke();
         text(displayText, WIDTH / 2 + leftMargin, 200);
     }
@@ -260,6 +259,11 @@ function addGravity(planet) {
 }
 
 function handleKeyEvents() {
+    if (keyIsDown(ENTER)) {
+        resetToLevel(currentLevel, true);
+        setPause(false);
+    }
+
     if (pause || losing_state > 0 || winning) {
         return;
     }
@@ -317,10 +321,7 @@ function updateThrusters() {
     }
 }
 
-function resetToLevel(n) {
-    stars = [];
-    comets = [];
-
+function resetToLevel(n, keep_old_comets) {
     level_buttons[currentLevel].img = sprites.buttons.numbers[currentLevel];
     level_buttons[currentLevel].hoverImg = sprites.buttons.numbersHover[currentLevel];
     level_buttons[n].img = sprites.buttons.reset;
@@ -330,11 +331,15 @@ function resetToLevel(n) {
     winning = false;
     fuel = 150;
     trajectory = [];
-    generateStarsAndComets();
+    if (!keep_old_comets) {
+        stars = [];
+        comets = [];
+        generateStarsAndComets();
+    }
     planetList = level[n].planetList.map(x => new Body(x));
     displayText = level[n].text;
-    ship = new Body({ ...level[n].ship, img: sprites.rocket[0] });
-    home = new Body({ ...level[n].home, img: sprites.home });
+    ship = new Body({ ...level[n].ship, img: sprites => sprites.rocket[0] });
+    home = new Body({ ...level[n].home, img: sprites => sprites.home });
     trajectory = [];
     frameClickedLevel = frameCount;
 }
@@ -393,9 +398,14 @@ function generateStarsAndComets() {
         let r = random(0.5, 2);
         comets.push(new Body({ x: posX, y: posY, velX: vel.x, velY: vel.y, mass: 1, r: r, isComet: true }));
     }
-    print(comets);
 }
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+}
+
+function unlock_all() {
+    for (let l of level) {
+        l.unlocked = true;
+    }
 }

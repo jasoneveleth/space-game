@@ -10,7 +10,7 @@ class Body {
         this.torques = [];
         this.inertia = options.inertia || 1;
         this.img = options.img;
-        this.r = options.r || this?.img?.width * 25/32 || 25;
+        this.r = options.r || this.img?.(sprites).width * 25/32 || 25;
         this.isComet = options.isComet || false;
     }
 
@@ -44,7 +44,7 @@ class Body {
         push();
         translate(this.pos.x + leftMargin, this.pos.y);
         rotate(this.angle);
-        image(this.img, -this.img.width, -this.img.height, this.img.width * 2, this.img.height * 2);
+        image(this.img(sprites), -this.img(sprites).width, -this.img(sprites).height, this.img(sprites).width * 2, this.img(sprites).height * 2);
         pop();
 
         return this;
