@@ -12,7 +12,7 @@ let shipImgInfo;
 let sprites = {};
 let home;
 let level;
-let level1_button;
+let level_buttons = [];
 let thrust;
 let thrusters_on = false;
 let thrust_trajectory;
@@ -48,7 +48,9 @@ function setup() {
 
     trajectory = [];
     button = new Button(WIDTH / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
-    level1_button = new Button(WIDTH / 2 + 50, 50, 35, 35, "1", colors.blue, colors.lightBlue);
+    for (let i = 0; i < level.length; i++) {
+        level_buttons.push(new Button(WIDTH / 2 + 50 * (i + 1), 50, 35, 35, new String(i + 1), colors.blue, colors.lightBlue));
+    }
     thrust_trajectory = [];
     for (let i = 0; i < 30; i++) {
         let randomX = random(0, windowWidth);
@@ -73,7 +75,9 @@ function draw() {
 
     background(0);
     button.show();
-    level1_button.show();
+    for (let btn in level_buttons) {
+        btn.show();
+    }
 
     // display stars
     for (var star of stars) {
@@ -184,7 +188,9 @@ function mouseClicked() {
         pause = !pause;
     }
 
-    if (level1_button.isHovering()) {
-        resetToLevel(0);
+    for (let i = 0; i < level_buttons.length; i++) {
+        if (level_buttons[i].isHovering()) {
+            resetToLevel(i);
+        }
     }
 }
