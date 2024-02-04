@@ -11,6 +11,7 @@ class Body {
         this.inertia = options.inertia || 1;
         this.r = options.r || this?.img?.width || 25;
         this.img = options.img;
+        this.isComet = options.isComet || false;
     }
 
     get x() {
@@ -32,6 +33,9 @@ class Body {
     show() {
         if (!this.img) {
             fill(255, 0, 0);
+            if (this.isComet) {
+                fill(255,255,255)
+            }
             ellipse(this.x + leftMargin, this.y, this.r * 2, this.r * 2);
             return this;
         }
