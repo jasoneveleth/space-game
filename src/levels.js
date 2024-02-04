@@ -1,5 +1,6 @@
 function level_setup() {
     return [
+        { planetList: [{ x: WIDTH / 2 - 100, y: HEIGHT - 30, velX: -300, velY: 10, img: sprites.planet[0] }] },
         {
             text: `Try to get home! 
 Use arrow keys to turn and space bar for thrust.`,
