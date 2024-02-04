@@ -244,7 +244,7 @@ function displayBackground() {
             force = p5.Vector.fromAngle(angle);
             force.mult(0.001);
             comet.addForce(force);
-            comet.update();
+            comet.update(1/60);
         }
         comet.show();
     }
