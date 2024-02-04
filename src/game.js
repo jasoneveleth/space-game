@@ -40,7 +40,8 @@ const colors = {
 function preload() {
     sprites.rocket = [loadImage("./assets/rocket-sprite.png")];
     sprites.home = loadImage("./assets/home-sprite.png");
-    sprites.planet = [loadImage("./assets/planet-sprite-1.png"), loadImage("./assets/planet-sprite-2.png")];
+    sprites.planet = [loadImage("./assets/planet-sprite-1.png"), loadImage("./assets/planet-sprite-2.png"), 
+    loadImage("./assets/planet-sprite-green.png"),loadImage("./assets/planet-sprite-negative.png")];
     for (let i = 0; i < 26; i++) {
         sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`));
     }
