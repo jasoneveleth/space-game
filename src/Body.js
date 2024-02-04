@@ -31,7 +31,7 @@ class Body {
 
     show() {
         if (!this.img) {
-            fill(255);
+            fill(255, 0, 0);
             ellipse(this.x, this.y, this.r, this.r);
             return this;
         }

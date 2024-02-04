@@ -6,6 +6,7 @@ let pause = false;
 let verbose = false;
 const G = 40;
 let button;
+let losing_state = -1
 
 let shipImgInfo;
 let sprites = {};
@@ -29,8 +30,11 @@ const colors = {
 };
 
 function preload() {
-    sprites.rocket = loadImage("./assets/rocket-sprite.png");
+    sprites.rocket = [loadImage("./assets/rocket-sprite.png")];
     sprites.home = loadImage("./assets/home-sprite.png");
+    for (let i = 0; i < 26; i++) {
+        sprites.rocket.push(loadImage(`./assets/explosion/output${i}.png`))
+    }
 }
 
 function setup() {
@@ -47,6 +51,19 @@ function setup() {
 }
 
 function draw() {
+    if (losing_state > 0) {
+        console.log(losing_state, Math.floor(losing_state));
+        ship.img = sprites.rocket[Math.floor(losing_state)]
+        losing_state += 0.5;
+        losing_state = Math.min(losing_state, 26);
+    } else {
+        for (let planet of planetList) {
+            if (ship.isColliding(planet)) {
+                losing_state = 1;
+            }
+        }
+    }
+
     background(0);
     button.show();
     level1_button.show();
@@ -57,7 +74,7 @@ function draw() {
     for (let planet of planetList) {
         planet.show();
 
-        if (pause) {
+        if (pause || losing_state > 0) {
             continue;
         }
         // calculate gravitational force
@@ -106,7 +123,7 @@ function draw() {
     }
 
     // display the ship on the screen
-    if (!pause) {
+    if (!pause && losing_state == 0) {
         ship.update(1 / 60);
     }
     ship.show();
@@ -114,8 +131,9 @@ function draw() {
 }
 
 function resetToLevel(n) {
+    losing_state = 0;
     planetList = level[n].planetList.map(x => new Body(x));
-    ship = new Body({ ...level[n].ship, img: sprites.rocket });
+    ship = new Body({ ...level[n].ship, img: sprites.rocket[0] });
     home = new Body({ ...level[n].home, img: sprites.home });
 }
 
