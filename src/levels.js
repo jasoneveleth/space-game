@@ -28,6 +28,27 @@ Use arrow keys to turn and space bar for thrust.`,
             ],
             ship: { x: 100, y: 300, mass: 10, velY: 0 },
             home: { x: 860, y: windowHeight / 2, mass: 2000, img: sprites.home, r: 50 },
+        },
+        {
+            text: "Find the correct path",
+            planetList: [
+                { x: 400, y: 400, velX: -0.05, velY: -0.05, mass: 10000, img: sprites.planet[0] },
+                { x: 730, y: 550, velX: 0.05, velY: 0.05, mass: 10000, img: sprites.planet[1] },
+                { x: 700, y: 250, velX: 0.05, mass: 5000, img: sprites.planet[0] },
+            ],
+            ship: { x: 100, y: 300, mass: 10, velY: 0 },
+            home: { x: 860, y: windowHeight / 2, mass: 2000, img: sprites.home, r: 50 },
+        },
+        {
+            text: "Take it home",
+            planetList: [
+                { x: 300, y: 500, velX: -0.05, velY: -0.05, mass: 10000, img: sprites.planet[0] },
+                { x: 450, y: 350, velX: 0.05, velY: 0.05, mass: 10000, img: sprites.planet[1] },
+                { x: 670, y: 300, velX: -0.05, mass: 5000, img: sprites.planet[0] },
+                { x: 600, y: 600, velX: -0.05, mass: 5000, img: sprites.planet[1] }
+            ],
+            ship: { x: 100, y: 300, mass: 10, velY: 0 },
+            home: { x: 860, y: windowHeight / 2, mass: 2000, img: sprites.home, r: 50 },
         }
     ];
 }
