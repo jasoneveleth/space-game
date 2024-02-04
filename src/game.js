@@ -155,7 +155,7 @@ function draw() {
             force = p5.Vector.fromAngle(angle);
             force.mult(0.001);
             planet.addForce(force);
-            planet.update();
+            planet.update(1/60);
         }
         addGravity(planet);
     }
