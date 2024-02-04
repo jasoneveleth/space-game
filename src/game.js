@@ -15,12 +15,13 @@ let level;
 let level1_button;
 let thrust;
 let thrusters_on = false;
-let thrust_trajectory;
-let fuel = 150;
+let thrustTrajectory;
+let fuel;
 const WIDTH = 960;
 const HEIGHT = 540;
 let leftMargin = 0;
 let stars = [];
+let comets = [];
 
 const colors = {
     green: "#CAE7B9",
@@ -45,6 +46,7 @@ function setup() {
 
     level = level_setup();
     resetToLevel(0);
+    fuel = 150;
 
     trajectory = [];
     button = new Button(WIDTH / 2, 50, 35, 35, "⏸", colors.blue, colors.lightBlue);
@@ -55,6 +57,9 @@ function setup() {
         let randomY = random(0, windowHeight);
         stars.push(createVector(randomX, randomY));
     }
+    thrustTrajectory = [];
+    generateStarsAndComets();
+
 }
 
 function draw() {
@@ -72,24 +77,19 @@ function draw() {
     }
 
     background(0);
-    button.show();
-    level1_button.show();
 
     // display stars
     for (var star of stars) {
         fill(255, 255, random(0, 255));
         ellipse(star.x, star.y, 5, 5);
     }
-    fill(255, 255, 255);
+    fill(255,255,255)
 
-    // fuel bar
-    fill(colors.blue);
-    rect(windowWidth - 150, 50, 200, 35, 5);
-    fill(0, 0, 0);
-    rect(windowWidth - 150, 50, 150, 10);
-    fill(255, 165, 0);
-    rect(windowWidth - 225 + fuel / 2, 50, fuel, 10);
-    fill(255, 255, 255);
+    // display comets
+    for (var comet of comets) {
+        comet.show()
+    }
+
 
     thrusters_on = false;
     leftMargin = (windowWidth - WIDTH) / 2;
@@ -141,21 +141,21 @@ function draw() {
     // draw out the thruster light effect
     if (thrusters_on & (fuel >= 0)) {
         fuel -= 1;
-        thrust_trajectory.push({ x: thruster_pos.x, y: thruster_pos.y });
-        if (thrust_trajectory.length > 20) {
-            thrust_trajectory.shift();
+        thrustTrajectory.push({ x: thruster_pos.x, y: thruster_pos.y });
+        if (thrustTrajectory.length > 20) {
+            thrustTrajectory.shift();
         }
-        noStroke();
-        for (var i = thrust_trajectory.length - 1; i >= 0; i--) {
-            multiplier = 255 / thrust_trajectory.length;
-            fill(i * multiplier, (i * multiplier) / 2, 0);
-            ellipse(thrust_trajectory[i].x + leftMargin, thrust_trajectory[i].y, 10, 10);
+        noStroke()
+        for (var i = thrustTrajectory.length-1; i>=0; i--) {
+            multiplier = 255 / thrustTrajectory.length
+            fill(i*multiplier, i*multiplier/2, 0)
+            ellipse(thrustTrajectory[i].x + leftMargin, thrustTrajectory[i].y, 10, 10)
         }
         stroke(255, 255, 255);
     }
 
-    if (!thrusters_on && thrust_trajectory.length > 0) {
-        thrust_trajectory = [];
+    if (!thrusters_on && thrustTrajectory.length>0) {
+        thrustTrajectory = []
     }
 
     // display the ship on the screen
@@ -164,10 +164,26 @@ function draw() {
     }
     ship.show();
     home.show();
+
+    // show buttons and fuel bar
+    button.show();
+    level1_button.show();
+
+    // fuel bar 
+    fill(colors.blue)
+    rect(windowWidth - 150, 50, 200, 35, 5)
+    fill(0,0,0)
+    rect(windowWidth - 150, 50, 150, 10)
+    fill(255,165,0)
+    rect(windowWidth - 225 + fuel/2, 50, fuel, 10)
+    fill(255,255,255)
 }
 
 function resetToLevel(n) {
     losing_state = 0;
+    fuel = 150;
+    trajectory = [];
+    generateStarsAndComets();
     planetList = level[n].planetList.map(x => new Body(x));
     ship = new Body({ ...level[n].ship, img: sprites.rocket[0] });
     home = new Body({ ...level[n].home, img: sprites.home });
@@ -187,4 +203,23 @@ function mouseClicked() {
     if (level1_button.isHovering()) {
         resetToLevel(0);
     }
+}
+
+function generateStarsAndComets() {
+    // generating stars
+    for (let i = 0; i < 50; i++) {
+        let randomX = random(0, windowWidth);
+        let randomY = random(0, windowHeight);
+        stars.push(createVector(randomX, randomY))
+    }
+    // generating comets
+    for (let i = 0; i < 20; i++) {
+        let posX = random(0, windowWidth);
+        let posY = random(0, windowHeight);
+        let angle = random(0, 2*PI);
+        let vel = p5.Vector.mult(p5.Vector.fromAngle(angle), 100);
+        console.log(vel);
+        comets.push(new Body({x: posX, y: posY, velX: vel.x, velY: vel.y, r: 5, isComet: true}))
+    }
+    print(comets)
 }
