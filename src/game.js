@@ -396,7 +396,7 @@ function generateStarsAndComets() {
         let vel = p5.Vector.mult(p5.Vector.fromAngle(angle), 0.01);
         let r = random(0.5, 2);
         console.log(vel);
-        comets.push(new Body({ x: posX, y: posY, velX: vel.x, velY: vel.y, r: r, isComet: true }));
+        comets.push(new Body({ x: posX, y: posY, velX: vel.x, velY: vel.y, mass: 1, r: r, isComet: true }));
     }
     print(comets);
 }
