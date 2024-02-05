@@ -88,6 +88,7 @@ function setup() {
         }
         level_buttons.push(new Button(WIDTH / 2 + 50 * (i+1) - level.length * 50, 50, 35, 35, levelIcon, levelIconHover));
     }
+    newInfinitePlanets();
     resetToLevel(0);
     thrust_trajectory = [];
     for (let i = 0; i < 30; i++) {
@@ -195,7 +196,7 @@ function draw() {
         // textAlign(CENTER, CENTER);
         fill("red");
         stroke(0);
-        text("GAME OVER", windowWidth / 2, windowHeight / 2);
+        text("DIDN'T MAKE IT HOME", windowWidth / 2, windowHeight / 2);
         fill("white");
         textSize(20);
         text("PRESS RESTART TO PLAY AGAIN", windowWidth / 2, windowHeight / 2 + 75);
@@ -208,7 +209,7 @@ function draw() {
         textSize(100);
         textAlign(CENTER, CENTER);
         // textAlign(CENTER, CENTER);
-        if (currentLevel >= level.length - 1) {
+        if (currentLevel >= level.length - 2) {
             fill("green");
             stroke(0);
             text("YOU WIN!", windowWidth / 2, windowHeight / 2);
@@ -321,14 +322,34 @@ function updateThrusters() {
     }
 }
 
+function newInfinitePlanets() {
+    level[level.length-1].text = undefined;
+    level[level.length-1].planetList = [];
+
+    const shipx = Math.random()*200 + 50;
+    const shipy = Math.random()*(HEIGHT/2) + HEIGHT/4;
+    level[level.length-1].ship = { x: shipx, y: shipy, mass: 10, velY: 0, angle: Math.PI / 4 };
+
+    const homex = Math.random()*200 + 600;
+    const homey = Math.random()*(HEIGHT/2) + HEIGHT/4;
+    level[level.length-1].home = { x: homex, y: homey, mass: 2000, img: sprites => sprites.home, r: 50 };
+
+    const numPlanets = Math.floor(Math.random() * 4) + 1;
+    for (let i = 0; i < numPlanets; i++) {
+        const x = Math.random()*WIDTH;
+        const y = Math.random()*WIDTH;
+        const ms = [10000, 2000, 5000, -10000, -5000];
+        const mass = ms[Math.floor(Math.random()*4)]
+        level[level.length-1].planetList.push({ x: x, y: y, mass: mass, img: sprites => sprites.planet[0] });
+    }
+}
+
 function resetToLevel(n, keep_old_comets) {
     level_buttons[currentLevel].img = sprites.buttons.numbers[currentLevel];
     level_buttons[currentLevel].hoverImg = sprites.buttons.numbersHover[currentLevel];
     level_buttons[n].img = sprites.buttons.reset;
     level_buttons[n].hoverImg = sprites.buttons.resetHover;
     currentLevel = n;
-    losing_state = 0;
-    winning = false;
     fuel = 150;
     trajectory = [];
     if (!keep_old_comets) {
@@ -336,12 +357,17 @@ function resetToLevel(n, keep_old_comets) {
         comets = [];
         generateStarsAndComets();
     }
+    if (currentLevel == level.length-1 && winning && losing_state == 0) {
+        newInfinitePlanets();
+    }
     planetList = level[n].planetList.map(x => new Body(x));
     displayText = level[n].text;
     ship = new Body({ ...level[n].ship, img: sprites => sprites.rocket[0] });
     home = new Body({ ...level[n].home, img: sprites => sprites.home });
     trajectory = [];
     frameClickedLevel = frameCount;
+    winning = false;
+    losing_state = 0;
 }
 
 function startMenuScreen() {
@@ -407,5 +433,9 @@ function windowResized() {
 function unlock_all() {
     for (let l of level) {
         l.unlocked = true;
+    }
+    for (let i = 0; i < level.length; i++) {
+        level_buttons[i].img = sprites.buttons.numbers[i];
+        level_buttons[i].hoverImg = sprites.buttons.numbersHover[i];
     }
 }
