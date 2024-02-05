@@ -338,9 +338,9 @@ function newInfinitePlanets() {
     for (let i = 0; i < numPlanets; i++) {
         const x = Math.random()*WIDTH;
         const y = Math.random()*WIDTH;
-        const ms = [10000, 2000, 5000, -10000, -5000];
-        const mass = ms[Math.floor(Math.random()*4)]
-        level[level.length-1].planetList.push({ x: x, y: y, mass: mass, img: sprites => sprites.planet[0] });
+        const templates = [planet0Something, purplePlanet, bigPurple, planet0, planet1];
+        const p = templates[Math.floor(Math.random()*5)]
+        level[level.length-1].planetList.push({ x: x, y: y, ...p });
     }
 }
 
